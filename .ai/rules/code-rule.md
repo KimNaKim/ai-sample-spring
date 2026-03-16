@@ -81,10 +81,11 @@ com.example.demo/
 
 ---
 
-## 프론트엔드 (JavaScript) 규칙
+## 프론트엔드 (JavaScript/CSS) 규칙
 
-- POST 요청 기본: `<form>` 태그 + `name` 속성으로 제출 (페이지 이동 방식)
-- Ajax가 필요한 경우만 fetch 사용 (중복체크, 부분 갱신 등)
+- **디자인 시스템 준수**: 모든 UI/레이아웃 작업 시 `.ai/rules/design-system.md`를 반드시 읽고 `frontend-design` 스킬을 사용하여 작업한다.
+- **POST 요청 기본**: `<form>` 태그 + `name` 속성으로 제출 (페이지 이동 방식)
+- **Ajax 연동**: Ajax가 필요한 경우만 fetch 사용 (중복체크, 부분 갱신 등)
 
 ---
 
@@ -92,7 +93,8 @@ com.example.demo/
 
 | 대상                  | 컨벤션       | 예시                             |
 | --------------------- | ------------ | -------------------------------- |
-| 클래스/파일           | PascalCase   | `BoardService`                   |
+| 클래스/파일 (Java)    | PascalCase   | `BoardService`                   |
+| Mustache 파일         | kebab-case   | `board-list.mustache`            |
 | 메서드/변수           | camelCase    | `findAll`                        |
 | 테이블                | snake_case + `_tb` | `board_tb`                 |
 | 패키지                | lowercase    | `board`, `_core`                 |

@@ -1,12 +1,38 @@
 package com.example.demo.board;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Data;
 
 public class BoardResponse {
 
-    // RULE: Detail DTO는 상세 정보를 저장한다.
+    // RULE: Max DTO는 테이블 전체 컬럼 (상세·목록 겸용)
+    @Data
+    public static class Max {
+        private Integer id;
+        private String title;
+        private String content;
+
+        public Max(Board board) {
+            this.id = board.getId();
+            this.title = board.getTitle();
+            this.content = board.getContent();
+        }
+    }
+
+    // RULE: Detail DTO는 조인 포함 확장 정보
     @Data
     public static class Detail {
+        private Integer id;
+        private String title;
+        private String content;
+        private String username;
 
+        public Detail(Board board) {
+            this.id = board.getId();
+            this.title = board.getTitle();
+            this.content = board.getContent();
+            this.username = board.getUser().getUsername();
+        }
     }
 }

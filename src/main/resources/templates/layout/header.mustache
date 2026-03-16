@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <title>SimpleBlog</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Pretendard 폰트 불러오기 -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="container">
+        <a class="logo" href="/">SimpleBlog</a>
+        <ul class="nav-links">
+            {{#sessionUser}}
+                <li><a class="nav-link" href="/board/save-form">글쓰기</a></li>
+                <li><a class="nav-link" href="/user/update-form">회원정보</a></li>
+                <li><a class="nav-link btn-nav" href="/logout">로그아웃</a></li>
+            {{/sessionUser}}
+            {{^sessionUser}}
+                <li><a class="nav-link" href="/login-form">로그인</a></li>
+                <li><a class="nav-link btn-nav" href="/join-form">시작하기</a></li>
+            {{/sessionUser}}
+        </ul>
+    </div>
+</nav>
+
+<main class="container main-content">

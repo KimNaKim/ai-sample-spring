@@ -1,5 +1,11 @@
 # AI Guide
 
+## 0. 기본 언어 설정 (Language Setting)
+
+- 모든 대화와 문서 작성은 **한국어**를 기본으로 한다. 단, 코드 내 주석이나 영문 관례인 부분은 예외로 한다.
+
+---
+
 ## 1. 자동 동기화 (최우선 실행)
 
 이 문서를 읽는 즉시 `.ai/skills/*/SKILL.md` 및 `.ai/agents/*/AGENT.md` 파일을 스캔하여 name, description을 반드시 읽어라.

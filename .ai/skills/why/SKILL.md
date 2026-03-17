@@ -2,7 +2,7 @@
 name: why
 description: >
   "/why", "왜 이런 일이?", "원인 분석해줘", "규칙 갱신해줘", "룰에 추가해" 요청 시 트리거된다.
-mode: 수동
+mode: manual
 ---
 
 ## 1. 목적

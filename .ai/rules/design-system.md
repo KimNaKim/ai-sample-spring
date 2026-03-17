@@ -18,8 +18,10 @@
 | | `--color-primary-hover` | `#1565c0` | 버튼/링크 호버 시 |
 | | `--color-bg` | `#f8faff` | 전체 배경색 (Soft Gray-Blue) |
 | | `--color-surface` | `#ffffff` | 카드, 네비게이션 배경 |
+| | `--color-nav-bg` | `#1e293b` | 네비바/푸터 다크 배경 |
 | | `--color-text-main` | `#1e293b` | 메인 텍스트 (Slate-800) |
 | | `--color-text-muted` | `#64748b` | 보조 텍스트 (Slate-500) |
+| | `--color-text-on-dark` | `#f8fafc` | 어두운 배경 위 텍스트 |
 | | `--color-border` | `#e2e8f0` | 구분선, 테두리 |
 | **Shape** | `--radius-sm` | `8px` | 입력창, 작은 버튼 |
 | | `--radius-md` | `12px` | 기본 요소 (Card, Nav) |
@@ -27,7 +29,7 @@
 | **Shadow** | `--shadow-sm` | `0 2px 4px rgba(0,0,0,0.05)` | 은은한 깊이감 |
 | | `--shadow-md` | `0 10px 15px -3px rgba(0,0,0,0.1)` | 메인 레이아웃 그림자 |
 | **Spacing** | `--space-xs` | `8px` | 요소 간 좁은 여백 |
-| | `--space-sm` | `16px` | 기본 여백 |
-| | `--space-md` | `24px` | 섹션 내 여백 |
-| | `--space-lg` | `48px` | 큰 영역 간 여백 |
+| | `--space-sm` | `16px` | 기본 여백 (1rem) |
+| | `--space-md` | `24px` | 섹션 내 여백 (1.5rem) |
+| | `--space-lg` | `48px` | 큰 영역 간 여백 (3rem) |
 | **Typography** | `--font-main` | `'Pretendard', system-ui, sans-serif` | 기본 폰트 |

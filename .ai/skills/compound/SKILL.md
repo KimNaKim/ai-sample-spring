@@ -1,8 +1,9 @@
 ---
-name: plan
+name: compound
 description: >
   '선 계획, 후 승인, 사후 보고' 프로세스를 강제하는 워크플로우.
   "컴파운드 실행", "compound 실행", "컴파운드 모드", "compound mode" 요청 시 발동한다.
+mode: manual
 ---
 
 이 스킬은 코드 작성 전 단계별 승인을 거쳐 안전하고 투명하게 작업을 진행하기 위한 워크플로우를 정의합니다.

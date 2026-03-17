@@ -37,4 +37,11 @@ public class UserService {
 
         return new UserResponse.Min(user); // 더티 체킹으로 업데이트됨
     }
+
+    public void sameCheck(String username) {
+        userRepository.findByUsername(username)
+                .ifPresent(user -> {
+                    throw new RuntimeException("이미 존재하는 아이디입니다.");
+                });
+    }
 }

@@ -8,10 +8,11 @@
 
 ## Phase 2: 회원 인증 시스템 (Membership System) - [완료]
 - [x] 회원가입 로직 구현 (아이디 중복 체크 포함)
-- [x] 세션 기반 로그인/로그아웃 구현 (BCrypt 암호화 및 하이브리드 검증 적용)
+- [x] Spring Security 도입 및 `PasswordEncoder.matches()` 기반 인증 구현
+- [x] `SecurityConfig` 설정을 통한 권한 및 CSRF 관리
 - [x] 회원 정보 수정 (Update) 및 세션 동기화 로직 구현
 - [ ] 회원 탈퇴 및 관련 데이터 처리 로직 (추후 구현 가능)
-- [ ] 인증 필터 또는 인터셉터를 통한 권한 관리 (Phase 5 연계)
+- [x] 인증 필터 또는 인터셉터를 통한 권한 관리 (Security 설정으로 대체)
 
 ## Phase 3: 게시글 관리 시스템 (Core Blog Features)
 - [ ] 게시글 CRUD (목록, 상세, 작성, 수정, 삭제) 구현

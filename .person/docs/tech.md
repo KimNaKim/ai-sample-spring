@@ -7,8 +7,9 @@
 ## 1. 기술 스택 (Tech Stack)
 
 ### 1.1 Backend
-- **Language**: Java 17
-- **Framework**: Spring Boot 3.x
+- **Language**: Java 21
+- **Framework**: Spring Boot 4.0.3
+- **Security**: Spring Security (PasswordEncoder 기반 인증)
 - **ORM**: Spring Data JPA (Hibernate)
 - **Validation**: Jakarta Bean Validation (Hibernate Validator)
 - **Lombok**: 보일러플레이트 코드 제거 및 가독성 향상
@@ -36,9 +37,10 @@
 - `@Controller` (화면 전환)와 `@RestController` (데이터 통신)는 **파일을 엄격히 분리**합니다.
 - REST API는 항상 `/api` 접두사를 사용합니다.
 
-### 2.3 무상태성 및 세션 관리
-- **Authentication**: Spring Security를 사용하지 않고 `HttpSession`을 직접 관리합니다.
-- **Authorization**: 인터셉터(Interceptor) 또는 서비스 레이어의 권한 체크 로직을 활용합니다.
+### 2.3 보안 및 세션 관리
+- **Authentication**: Spring Security의 `PasswordEncoder`를 활용하여 비밀번호를 암호화하고, `matches()` 메서드로 검증합니다.
+- **Session Management**: 인증 성공 후 `HttpSession`을 통해 세션 유저 정보를 관리합니다.
+- **Authorization**: `SecurityConfig`를 통해 접근 권한을 관리하며, 상세 비즈니스 권한은 서비스 레이어에서 체크합니다.
 
 ---
 

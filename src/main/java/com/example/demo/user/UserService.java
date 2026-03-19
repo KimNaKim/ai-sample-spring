@@ -1,6 +1,6 @@
 package com.example.demo.user;
 
-import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,10 +11,11 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public void save(UserRequest.Join requestDTO) {
-        String hash = BCrypt.hashpw(requestDTO.getPassword(), BCrypt.gensalt());
+        String hash = passwordEncoder.encode(requestDTO.getPassword());
         requestDTO.setPassword(hash);
         userRepository.save(requestDTO.toEntity());
     }
@@ -24,24 +25,7 @@ public class UserService {
         User user = userRepository.findByUsername(requestDTO.getUsername())
                 .orElseThrow(() -> new RuntimeException("아이디 또는 비밀번호가 틀렸습니다."));
 
-        String dbPassword = user.getPassword();
-        boolean isValid = false;
-
-        // 1. BCrypt 형식($2a$...)인지 확인
-        if (dbPassword.startsWith("$2a$")) {
-            isValid = BCrypt.checkpw(requestDTO.getPassword(), dbPassword);
-        } else {
-            // 2. 평문일 경우 직접 비교 (마이그레이션 대상)
-            isValid = dbPassword.equals(requestDTO.getPassword());
-            
-            // 3. 평문 로그인 성공 시 BCrypt로 암호화하여 마이그레이션 수행 (더티 체킹)
-            if (isValid) {
-                String hash = BCrypt.hashpw(requestDTO.getPassword(), BCrypt.gensalt());
-                user.setPassword(hash);
-            }
-        }
-
-        if (!isValid) {
+        if (!passwordEncoder.matches(requestDTO.getPassword(), user.getPassword())) {
             throw new RuntimeException("아이디 또는 비밀번호가 틀렸습니다.");
         }
 
@@ -54,7 +38,7 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
 
         if (requestDTO.getPassword() != null && !requestDTO.getPassword().isEmpty()) {
-            String hash = BCrypt.hashpw(requestDTO.getPassword(), BCrypt.gensalt());
+            String hash = passwordEncoder.encode(requestDTO.getPassword());
             user.setPassword(hash);
         }
 

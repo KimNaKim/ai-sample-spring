@@ -37,6 +37,7 @@ com.example.demo/
 - 조회 메서드는 `@Transactional(readOnly = true)`를 사용한다.
 - 쓰기 메서드(save, update, delete)는 `@Transactional`을 사용한다.
 - DTO는 Service 레이어에서 변환하며, Entity를 Controller로 노출하지 않는다.
+- 비밀번호 암호화 및 검증은 **Spring Security의 `PasswordEncoder`**를 주입받아 사용하며, 검증 시 반드시 **`matches()`** 메서드를 사용한다. (직접적인 `BCrypt` 라이브러리 호출은 지양한다.)
 
 ## 5. Controller Rules
 

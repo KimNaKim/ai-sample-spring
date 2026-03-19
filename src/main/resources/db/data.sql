@@ -1,6 +1,6 @@
 -- 유저 더미 데이터
-INSERT INTO user_tb (username, password, created_at) VALUES ('ssar', '1234', NOW());
-INSERT INTO user_tb (username, password, created_at) VALUES ('cos', '1234', NOW());
+INSERT INTO user_tb (username, password, created_at) VALUES ('ssar', '$2a$10$cQwLuTjz5UIEnuY2rmU/AO5uKYYNzBUmc8bCNHtjSIUvZWi8H8sxe', NOW());
+INSERT INTO user_tb (username, password, created_at) VALUES ('cos', '$2a$10$cQwLuTjz5UIEnuY2rmU/AO5uKYYNzBUmc8bCNHtjSIUvZWi8H8sxe', NOW());
 
 -- 게시글 더미 데이터
 INSERT INTO board_tb (title, content, user_id, created_at) VALUES ('첫 번째 게시글', '안녕하세요. ssar의 첫 번째 글입니다.', 1, NOW());

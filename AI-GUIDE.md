@@ -3,7 +3,7 @@
 ## 0. 기본 언어 설정 (Language Setting)과 중요 규칙칙
 
 - 모든 대화와 문서 작성은 **한국어**를 기본으로 한다. 단, 코드 내 주석이나 영문 관례인 부분은 예외로 한다.
-- 버전 : spring 4.0.3
+- 버전 : Spring Boot 3.4.3
 - 사용기술 : mustache, h2, jpa
 - http 메서드 : get, post만 사용하여 구현한다. \*ApiController는 ajax가 필요할 때만 사용한다.
 - http 요청 방법 : form 태그 사용

@@ -1,115 +1,74 @@
-## COMMON, CODE, DESIGN, BUSINESS RULE필요
+# Code Rules
 
-## 패키지 구조
+## 1. Naming Conventions
 
-도메인 기반 플랫 구조를 사용한다. 레이어 기반 구조는 절대 사용하지 않는다.
+### 1.1 Mustache Templates
+
+- 모든 Mustache 템플릿 파일명은 **하이픈(`-`)**을 사용하여 구분한다. (Kebab-case)
+  - 예: `join-form.mustache`, `login-form.mustache`, `update-form.mustache`
+- 카멜 케이스(`joinForm.mustache`)는 지양한다.
+
+## 2. Package Structure
+
+- 도메인 중심 구조를 사용하며, 핵심 공통 기능은 `_core` 하위에 둔다.
 
 ```
 com.example.demo/
-  _core/utils/       ← 도메인 무관 공통 유틸 (Resp.java 등)
-  {domain}/          ← 해당 도메인의 모든 파일을 한 폴더에 (플랫)
+  _core/utils/       (공통 유틸리티 - Resp.java 등)
+  {domain}/          (도메인 별 패키지)
     {Domain}.java
-    {Domain}Controller.java       ← SSR (Mustache)
-    {Domain}ApiController.java    ← REST API (/api 접두사)
+    {Domain}Controller.java
+    {Domain}ApiController.java
     {Domain}Service.java
     {Domain}Repository.java
     {Domain}Request.java
     {Domain}Response.java
 ```
 
----
+## 3. Entity Rules
 
-## 어노테이션 순서
+- PK 타입은 `Integer`를 사용한다. (GenerationType.IDENTITY)
+- `@Builder`는 생성자나 메서드 위에 선언하며 클래스 레벨 사용은 지양한다.
+- 모든 연관관계는 `FetchType.LAZY`를 기본으로 한다.
+- 테이블명은 `{domain}_tb` 형식을 사용한다.
 
-| 레이어         | 순서                                                                         |
-| -------------- | ---------------------------------------------------------------------------- |
-| Entity         | `@NoArgsConstructor` → `@Data` → `@Entity` → `@Table(name = "{도메인}_tb")` |
-| Service        | `@Transactional(readOnly = true)` → `@RequiredArgsConstructor` → `@Service`  |
-| Controller     | `@RequiredArgsConstructor` → `@Controller`                                   |
-| RestController | `@RequiredArgsConstructor` → `@RestController` (별도 파일, `/api` 접두사)    |
+## 4. Service Rules
 
----
+- 조회 메서드는 `@Transactional(readOnly = true)`를 사용한다.
+- 쓰기 메서드(save, update, delete)는 `@Transactional`을 사용한다.
+- DTO는 Service 레이어에서 변환하며, Entity를 Controller로 노출하지 않는다.
 
-## Entity 규칙
+## 5. Controller Rules
 
-- PK 타입: `Integer` (`Long` 사용 금지), 전략: `GenerationType.IDENTITY`
-- `@Builder`는 생성자에만 — 클래스 레벨 선언 금지
-- 컬렉션 필드(`List`, `Set`)는 `@Builder` 생성자에 포함하지 않는다
-- 모든 연관관계: `FetchType.LAZY` — EAGER 금지
-- 생성일: `@CreationTimestamp` + `LocalDateTime createdAt`
-- 테이블명: `{domain}_tb`
+- SSR(@Controller)과 REST(@RestController)를 명확히 분리한다.
+- REST API 경로는 `/api`로 시작한다.
+- SSR은 `HttpSession`을 사용하고 `String`을 반환한다.
+- REST는 `Resp.ok()` 또는 `Resp.fail()`을 사용한다.
 
----
+## 6. DTO Rules
 
-## Service 규칙
+- 파일명 형식: `{Domain}Request.java`, `{Domain}Response.java`
+- 내부 클래스를 활용하여 static class로 선언한다.
+- Request 클래스명은 기능명(Save, Update, Login, Join)을 사용한다.
+- Response 클래스명은 데이터 범위를 기준으로 한다 (Max, Min, Detail).
 
-- 클래스 레벨 `@Transactional(readOnly = true)` 항상 선언
-- 쓰기 메서드(`save`, `update`, `delete`)에는 `@Transactional` 개별 선언
-- DTO는 Service 안에서 생성하여 반환 — 날(raw) Entity를 Controller로 전달 금지
+## 7. JavaScript Rules
 
----
+- 기본적으로 `<form>` 태그와 `name` 속성을 이용한 POST 요청을 우선한다.
+- 중복 체크나 부분 갱신 등 필요한 경우에만 `fetch` (Ajax)를 사용한다.
 
-## Controller 규칙
+## 8. H2 Console Configuration (Jakarta EE)
 
-- SSR(`@Controller`)과 REST(`@RestController`)는 **별도 파일로 분리**
-- REST 엔드포인트 주소는 `/api` 접두사 필수
-- SSR: `HttpSession` 생성자 주입, 반환값 `String` (템플릿 경로)
-- REST: `Resp.ok()` / `Resp.fail()` 사용
+Spring Boot 3.x/4.x 이상(Jakarta EE)에서는 H2 콘솔을 정적 리소스로 오인하여 발생하는 `No static resource` 오류를 방지하기 위해 반드시 `JakartaWebServlet`을 사용하여 수동으로 등록한다.
 
----
+- `ServletRegistrationBean<JakartaWebServlet>`을 사용하여 `/h2-console/*` 경로를 매핑한다.
+- `setLoadOnStartup(1)`을 설정하여 서버 기동 시 즉시 로드되도록 한다.
 
-## DTO 규칙
-
-- 도메인당 파일 하나씩: `{Domain}Request.java`, `{Domain}Response.java`
-- 외부 클래스에는 어노테이션 없음 / `@Data`는 내부 static class에만
-- Request 내부 클래스 이름: 기능명 (`Save`, `Update`, `Login`, `Join`)
-- Response 내부 클래스 이름: 데이터 범위 기준
-  - `Max`: 테이블 전체 컬럼 (상세·목록 겸용)
-  - `Min`: 최소 정보 (id + 대표값)
-  - `Detail`: 조인 포함 확장 정보
-  - `Option`: 셀렉트박스/드롭다운용
-- Entity → DTO 변환은 생성자 또는 정적 팩토리 메서드로 처리
-
----
-
-## 공통 응답
-
-- 위치: `_core/utils/Resp.java`
-- 성공: `Resp.ok(dto)` (status 200)
-- 실패: `Resp.fail(HttpStatus.BAD_REQUEST, "오류 메시지")`
-- 모든 REST API 응답은 반드시 `Resp<T>` 래퍼 사용 — 날(raw) 반환 금지
-
----
-
-## 프론트엔드 (JavaScript/CSS) 규칙
-
-- **디자인 시스템 준수**: 모든 UI/레이아웃 작업 시 `.ai/rules/design-system.md`를 반드시 읽고 `frontend-design` 스킬을 사용하여 작업한다.
-- **POST 요청 기본**: `<form>` 태그 + `name` 속성으로 제출 (페이지 이동 방식)
-- **Ajax 연동**: Ajax가 필요한 경우만 fetch 사용 (중복체크, 부분 갱신 등)
-
----
-
-## 네이밍
-
-| 대상                  | 컨벤션       | 예시                             |
-| --------------------- | ------------ | -------------------------------- |
-| 클래스/파일 (Java)    | PascalCase   | `BoardService`                   |
-| Mustache 파일         | kebab-case   | `board-list.mustache`            |
-| 메서드/변수           | camelCase    | `findAll`                        |
-| 테이블                | snake_case + `_tb` | `board_tb`                 |
-| 패키지                | lowercase    | `board`, `_core`                 |
-| Request 내부 클래스   | 기능명       | `Save`, `Update`, `Login`        |
-| Response 내부 클래스  | 데이터 범위  | `Max`, `Min`, `Detail`, `Option` |
-
----
-
-## 설정
-
-| 규칙         | 값 / 강제 사항                                       |
-| ------------ | ---------------------------------------------------- |
-| OSIV         | `false` — 절대 활성화하지 않는다                     |
-| Fetch 전략   | 항상 `LAZY` — `EAGER` 금지                           |
-| 배치 사이즈  | `default_batch_fetch_size=10`                         |
-| 인증 방식    | `HttpSession` — 별도 요청 없으면 Spring Security 금지 |
-| DTO 생성     | Service 레이어에서만                                  |
-| Entity 노출  | Controller에 Entity를 절대 전달하지 않는다            |
+```java
+@Bean
+public ServletRegistrationBean<JakartaWebServlet> h2ConsoleServlet() {
+    ServletRegistrationBean<JakartaWebServlet> bean = new ServletRegistrationBean<>(new JakartaWebServlet(), "/h2-console/*");
+    bean.setLoadOnStartup(1);
+    return bean;
+}
+```

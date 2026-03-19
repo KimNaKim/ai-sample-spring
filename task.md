@@ -18,38 +18,37 @@
 
 ---
 
-## Phase 2: 회원 관리 (User Domain) - [진행 중]
+## Phase 2: 회원 관리 (User Domain) - [완료]
 
 ### 2.1 회원가입 (Join)
-- [x] **[DTO]** `UserRequest.Join` 클래스 작성 (username, password, email)
-- [x] **[Service]** `UserService.join` 구현 (중복 체크 포함)
-- [ ] **[SSR]** `UserController` GET `/join-form` 메서드 구현
-- [ ] **[UI]** `user/join-form.mustache` 작성 (Form post, name 속성 매핑)
-- [ ] **[Validation]** 회원가입 후 로그인 페이지 이동 및 DB(`user_tb`) 적재 확인
+- [x] **[DTO]** `UserRequest.Join` 클래스 작성 (username, password, email, 주소 필드 추가)
+- [x] **[Service]** `UserService.save` 구현 (BCrypt 암호화 적용)
+- [x] **[SSR]** `UserController` GET `/join-form` 메서드 구현
+- [x] **[UI]** `user/join-form.mustache` 작성 (디자인 시스템 & 주소 API 적용)
+- [x] **[Validation]** 회원가입 후 로그인 페이지 이동 및 DB(`user_tb`) 적재 확인
 
 ### 2.2 로그인 (Login)
 - [x] **[DTO]** `UserRequest.Login` 클래스 작성
-- [x] **[Service]** `UserService.login` 구현 (`HttpSession`에 `UserResponse.Min` 저장)
-- [ ] **[SSR]** `UserController` GET `/login-form` 메서드 구현
-- [ ] **[SSR]** `UserController` POST `/login` 메서드 (로그인 처리 및 리다이렉트)
-- [ ] **[UI]** `user/login-form.mustache` 작성
-- [ ] **[Validation]** 로그인 성공 시 메인 페이지 이동 및 헤더(로그아웃 버튼) 변화 확인
+- [x] **[Service]** `UserService.login` 구현 (BCrypt 검증 및 평문 마이그레이션 로직 포함)
+- [x] **[SSR]** `UserController` GET `/login-form` 메서드 구현
+- [x] **[SSR]** `UserController` POST `/login` 메서드 (로그인 처리 및 세션 저장)
+- [x] **[UI]** `user/login-form.mustache` 작성
+- [x] **[Validation]** 로그인 성공 시 메인 페이지 이동 및 헤더(메뉴 분기) 변화 확인
 
 ### 2.3 회원 정보 수정 (Update)
 - [x] **[DTO]** `UserRequest.Update` 클래스 작성
-- [ ] **[Service]** `UserService.update` 구현 (더티 체킹 활용)
-- [ ] **[SSR]** `UserController` GET `/user/update-form` (세션 확인 필수)
-- [ ] **[UI]** `user/update-form.mustache` 작성 (기존 정보 렌더링)
-- [ ] **[Validation]** 수정 후 상세 정보 또는 메인 페이지에서 반영 확인
+- [x] **[Service]** `UserService.update` 구현 (더티 체킹 활용)
+- [x] **[SSR]** `UserController` GET `/user/update-form` (세션 확인 및 데이터 바인딩)
+- [x] **[UI]** `user/update-form.mustache` 작성 (기존 정보 렌더링 및 주소 API 연동)
+- [x] **[Validation]** 수정 후 세션 갱신 및 메인 페이지 반영 확인
 
 ### 2.4 회원 전용 API (REST)
-- [ ] **[REST]** `UserApiController` POST `/api/join` (필요 시)
-- [ ] **[REST]** `UserApiController` GET `/api/username-same-check` (아이디 중복 체크)
-- [ ] **[Validation]** Postman 또는 브라우저 콘솔을 통한 JSON 응답(`Resp.ok`) 확인
+- [x] **[REST]** `UserApiController` GET `/api/user/same-check` (아이디 중복 체크)
+- [x] **[Validation]** Fetch API를 통한 비동기 응답 확인
 
 ---
 
-## Phase 3: 게시글 관리 (Board Domain)
+## Phase 3: 게시글 관리 (Board Domain) - [대기]
 
 ### 3.1 게시글 목록 보기 (List)
 - [ ] **[DTO]** `BoardResponse.Max` 목록용 DTO 작성 (작성자 username 포함)
@@ -64,51 +63,3 @@
 - [ ] **[SSR]** `BoardController` GET `/board/{id}` 구현
 - [ ] **[UI]** `board/detail.mustache` 작성 (수정/삭제 버튼 권한 분기)
 - [ ] **[Validation]** 존재하지 않는 ID 접근 시 404 에러 페이지 처리 확인
-
-### 3.3 게시글 작성 (Save)
-- [ ] **[DTO]** `BoardRequest.Save` 작성
-- [ ] **[Service]** `BoardService.save` 구현 (세션 유저와 연관관계 매핑)
-- [ ] **[SSR]** `BoardController` GET `/board/save-form`
-- [ ] **[SSR]** `BoardController` POST `/board/save`
-- [ ] **[UI]** `board/save-form.mustache` 작성
-- [ ] **[Validation]** 작성 후 목록 페이지 상단에 신규 게시글 노출 확인
-
-### 3.4 게시글 수정/삭제 (Update/Delete)
-- [ ] **[DTO]** `BoardRequest.Update` 작성
-- [ ] **[Service]** `BoardService.update`, `deleteById` 구현 (작성자 본인 여부 검증)
-- [ ] **[SSR]** `BoardController` POST `/board/{id}/update`, `/board/{id}/delete`
-- [ ] **[UI]** `board/update-form.mustache` 작성
-- [ ] **[Validation]** 타인의 글 수정/삭제 시도 시 권한 에러(`Resp.fail`) 발생 확인
-
----
-
-## Phase 4: 댓글 관리 (Reply Domain)
-
-### 4.1 댓글 작성 (Save)
-- [ ] **[DTO]** `ReplyRequest.Save` 작성 (boardId, comment)
-- [ ] **[Service]** `ReplyService.save` 구현
-- [ ] **[REST]** `ReplyApiController` POST `/api/reply` (AJAX 권장)
-- [ ] **[UI]** `board/detail.mustache` 하단 댓글 작성 스크립트(fetch) 연동
-- [ ] **[Validation]** 댓글 작성 시 새로고침 없이(또는 리다이렉트 후) 목록에 즉시 반영 확인
-
-### 4.2 댓글 삭제 (Delete)
-- [ ] **[Service]** `ReplyService.delete` 구현 (작성자 검증)
-- [ ] **[REST]** `ReplyApiController` DELETE `/api/reply/{id}`
-- [ ] **[Validation]** 본인 댓글만 삭제 버튼이 활성화되는지 UI 및 API 검증
-
----
-
-## Phase 5: 최종 안정화 및 보안 (Polishing)
-
-### 5.1 인증 인터셉터 (LoginInterceptor)
-- [ ] `_core/interceptor/LoginInterceptor.java` 구현
-- [ ] `WebMvcConfig`: `/board/**`, `/user/update-form`, `/api/**` 등 경로 보호
-- [ ] **Validation**: 비로그인 상태로 글쓰기 접근 시 로그인 페이지 리다이렉트 확인
-
-### 5.2 유효성 검사 및 정교화
-- [ ] Server-side Validation: `@Valid` 또는 수동 검증 추가 (공백 체크 등)
-- [ ] Client-side Validation: HTML5 `required` 또는 간단한 JS 정규표현식
-- [ ] 디자인 디테일 수정: `style.css` 및 `design-system.md` 반영
-
-### 5.3 최종 통합 테스트
-- [ ] 전체 사용자 시나리오(회원가입 -> 로그인 -> 게시글 작성 -> 댓글 작성 -> 정보 수정 -> 탈퇴) 수행

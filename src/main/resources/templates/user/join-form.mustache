@@ -3,31 +3,73 @@
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-lg-6">
-            <div class="content-card">
-                <h1 class="text-center">회원가입</h1>
-                <hr>
+            <div class="content-card shadow-sm border-0 p-4" style="border-radius: var(--radius-md); background-color: var(--color-surface);">
+                <h1 class="text-center mb-4" style="color: var(--color-text-main); font-weight: 800;">회원가입</h1>
+                <hr class="mb-4" style="border-color: var(--color-border); opacity: 0.5;">
+                
                 <form action="/join" method="post" onsubmit="return valid()">
-                    <div class="mb-3 mt-3">
-                        <label for="username" class="form-label">아이디</label>
-                        <div class="d-flex">
-                            <input type="text" class="form-control me-2" id="username" placeholder="아이디를 입력하세요" name="username" required>
-                            <button type="button" class="btn btn-outline-primary text-nowrap" onclick="usernameSameCheck()">중복체크</button>
+                    <!-- 아이디 섹션 -->
+                    <div class="mb-4">
+                        <label for="username" class="form-label fw-bold" style="color: var(--color-text-main);">아이디</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="username" placeholder="4~20자 사이로 입력하세요" 
+                                   name="username" required onchange="resetSameCheck()"
+                                   style="border-radius: var(--radius-sm) 0 0 var(--radius-sm); border: 1px solid var(--color-border);">
+                            <button type="button" class="btn btn-outline-primary fw-bold" onclick="usernameSameCheck()"
+                                    style="border-radius: 0 var(--radius-sm) var(--radius-sm) 0; border: 1px solid var(--color-primary); color: var(--color-primary);">
+                                중복체크
+                            </button>
                         </div>
-                        <small id="usernameCheckMsg" class="form-text text-muted">아이디 중복 체크를 해주세요.</small>
+                        <div id="usernameCheckMsg" class="form-text mt-2 small" style="color: var(--color-text-muted);">
+                            <i class="bi bi-info-circle me-1"></i>아이디 중복 체크를 진행해주세요.
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="password" class="form-label">비밀번호</label>
-                        <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력하세요" name="password" required>
+                    <!-- 비밀번호 섹션 -->
+                    <div class="mb-4">
+                        <label for="password" class="form-label fw-bold" style="color: var(--color-text-main);">비밀번호</label>
+                        <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력하세요" name="password" required
+                               style="border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
                     </div>
 
-                    <div class="mb-3">
-                        <label for="email" class="form-label">이메일</label>
-                        <input type="email" class="form-control" id="email" placeholder="이메일을 입력하세요" name="email" required>
+                    <!-- 이메일 섹션 -->
+                    <div class="mb-4">
+                        <label for="email" class="form-label fw-bold" style="color: var(--color-text-main);">이메일</label>
+                        <input type="email" class="form-control" id="email" placeholder="이메일(example@domain.com)을 입력하세요" name="email" required
+                               style="border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
                     </div>
 
-                    <div class="d-grid gap-2 mt-4">
-                        <button id="btnJoin" type="submit" class="btn btn-primary btn-lg" disabled>회원가입</button>
+                    <!-- 주소 섹션 (다음 단계 대비) -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold d-block" style="color: var(--color-text-main);">주소 <span class="badge bg-light text-muted fw-normal ms-1">선택사항</span></label>
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control" id="postcode" name="postcode" placeholder="우편번호" readonly
+                                   style="border-radius: var(--radius-sm) 0 0 var(--radius-sm); border: 1px solid var(--color-border); background-color: #fcfcfc;">
+                            <button type="button" class="btn btn-secondary btn-sm fw-bold" onclick="daumPostcode()"
+                                    style="border-radius: 0 var(--radius-sm) var(--radius-sm) 0; background-color: var(--color-text-muted); border: none;">
+                                주소 찾기
+                            </button>
+                        </div>
+                        <input type="text" class="form-control mb-2" id="address" name="address" placeholder="기본 주소" readonly
+                               style="border-radius: var(--radius-sm); border: 1px solid var(--color-border); background-color: #fcfcfc;">
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="detailAddress" name="detailAddress" placeholder="상세 주소"
+                                       style="border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="extraAddress" name="extraAddress" placeholder="참고항목" readonly
+                                       style="border-radius: var(--radius-sm); border: 1px solid var(--color-border); background-color: #fcfcfc;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 가입 버튼 -->
+                    <div class="d-grid gap-2 mt-5">
+                        <button id="btnJoin" type="submit" class="btn btn-primary btn-lg fw-bold py-3" disabled
+                                style="border-radius: var(--radius-md); background-color: var(--color-primary); border: none; transition: all 0.2s;">
+                            회원가입 완료
+                        </button>
                     </div>
                 </form>
             </div>
@@ -35,35 +77,48 @@
     </div>
 </div>
 
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
     let isSameCheck = false;
+
+    // 아이디 변경 시 중복 체크 상태 리셋
+    function resetSameCheck() {
+        isSameCheck = false;
+        const btnJoin = document.querySelector("#btnJoin");
+        btnJoin.disabled = true;
+        btnJoin.style.opacity = "0.6";
+        
+        let msgElement = document.querySelector("#usernameCheckMsg");
+        msgElement.innerHTML = '<i class="bi bi-exclamation-circle me-1"></i>아이디가 변경되었습니다. 다시 중복 체크를 해주세요.';
+        msgElement.style.color = "var(--color-text-muted)";
+    }
 
     function usernameSameCheck() {
         let username = document.querySelector("#username").value;
 
-        if (!username) {
-            alert("아이디를 입력해주세요.");
+        if (!username || username.length < 4 || username.length > 20) {
+            alert("아이디는 4~20자 사이여야 합니다.");
             return;
         }
 
         fetch(`/api/user/same-check?username=${username}`)
             .then(response => response.json())
             .then(responseBody => {
+                let msgElement = document.querySelector("#usernameCheckMsg");
+                const btnJoin = document.querySelector("#btnJoin");
+                
                 if (responseBody.status === 200) {
-                    alert(responseBody.msg);
                     isSameCheck = true;
-                    document.querySelector("#btnJoin").disabled = false;
-                    document.querySelector("#username").readOnly = true;
-                    document.querySelector("#usernameCheckMsg").innerText = "사용 가능한 아이디입니다.";
-                    document.querySelector("#usernameCheckMsg").classList.remove("text-muted");
-                    document.querySelector("#usernameCheckMsg").classList.add("text-success");
+                    btnJoin.disabled = false;
+                    btnJoin.style.opacity = "1";
+                    msgElement.innerHTML = `<i class="bi bi-check-circle-fill me-1"></i>${responseBody.msg}`;
+                    msgElement.style.color = "#2ecc71"; // Success Green
                 } else {
-                    alert(responseBody.msg);
                     isSameCheck = false;
-                    document.querySelector("#btnJoin").disabled = true;
-                    document.querySelector("#usernameCheckMsg").innerText = responseBody.msg;
-                    document.querySelector("#usernameCheckMsg").classList.remove("text-muted");
-                    document.querySelector("#usernameCheckMsg").classList.add("text-danger");
+                    btnJoin.disabled = true;
+                    btnJoin.style.opacity = "0.6";
+                    msgElement.innerHTML = `<i class="bi bi-x-circle-fill me-1"></i>${responseBody.msg}`;
+                    msgElement.style.color = "#e74c3c"; // Danger Red
                 }
             })
             .catch(error => {
@@ -74,10 +129,44 @@
 
     function valid() {
         if (!isSameCheck) {
-            alert("아이디 중복 체크를 해주세요.");
+            alert("아이디 중복 체크를 완료해주세요.");
             return false;
         }
         return true;
+    }
+
+    function daumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                var addr = '';
+                var extraAddr = '';
+
+                if (data.userSelectedType === 'R') {
+                    addr = data.roadAddress;
+                } else {
+                    addr = data.jibunAddress;
+                }
+
+                if(data.userSelectedType === 'R'){
+                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                        extraAddr += data.bname;
+                    }
+                    if(data.buildingName !== '' && data.apartment === 'Y'){
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    if(extraAddr !== ''){
+                        extraAddr = ' (' + extraAddr + ')';
+                    }
+                    document.getElementById("extraAddress").value = extraAddr;
+                } else {
+                    document.getElementById("extraAddress").value = '';
+                }
+
+                document.getElementById('postcode').value = data.zonecode;
+                document.getElementById("address").value = addr;
+                document.getElementById("detailAddress").focus();
+            }
+        }).open();
     }
 </script>
 

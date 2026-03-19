@@ -1,0 +1,46 @@
+{{> layout/header}}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5">
+            <div class="content-card shadow-sm border-0 p-4" style="border-radius: var(--radius-md); background-color: var(--color-surface);">
+                <h1 class="text-center mb-4" style="color: var(--color-text-main); font-weight: 800;">로그인</h1>
+                <hr class="mb-4" style="border-color: var(--color-border); opacity: 0.5;">
+                
+                <form action="/login" method="post">
+                    <!-- 아이디 섹션 -->
+                    <div class="mb-4">
+                        <label for="username" class="form-label fw-bold" style="color: var(--color-text-main);">아이디</label>
+                        <input type="text" class="form-control" id="username" placeholder="아이디를 입력하세요" 
+                               name="username" required
+                               style="border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
+                    </div>
+
+                    <!-- 비밀번호 섹션 -->
+                    <div class="mb-4">
+                        <label for="password" class="form-label fw-bold" style="color: var(--color-text-main);">비밀번호</label>
+                        <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력하세요" name="password" required
+                               style="border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
+                    </div>
+
+                    <!-- 로그인 버튼 -->
+                    <div class="d-grid gap-2 mt-5">
+                        <button type="submit" class="btn btn-primary btn-lg fw-bold py-3"
+                                style="border-radius: var(--radius-md); background-color: var(--color-primary); border: none; transition: all 0.2s;">
+                            로그인
+                        </button>
+                    </div>
+
+                    <!-- 회원가입 유도 -->
+                    <div class="text-center mt-4">
+                        <p class="small mb-0" style="color: var(--color-text-muted);">
+                            아직 계정이 없으신가요? <a href="/join-form" class="fw-bold" style="color: var(--color-primary); text-decoration: none;">회원가입 하러가기</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> layout/footer}}

@@ -40,12 +40,6 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/logout")
-    public String logout() {
-        session.invalidate();
-        return "redirect:/";
-    }
-
     @GetMapping("/user/update-form")
     public String updateForm(Model model) {
         UserResponse.Min sessionUser = (UserResponse.Min) session.getAttribute("sessionUser");

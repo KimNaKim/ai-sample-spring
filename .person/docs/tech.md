@@ -39,8 +39,8 @@
 
 ### 2.3 보안 및 세션 관리
 - **Authentication**: Spring Security의 `PasswordEncoder`를 활용하여 비밀번호를 암호화하고, `matches()` 메서드로 검증합니다.
-- **Session Management**: 인증 성공 후 `HttpSession`을 통해 세션 유저 정보를 관리합니다.
-- **Authorization**: `SecurityConfig`를 통해 접근 권한을 관리하며, 상세 비즈니스 권한은 서비스 레이어에서 체크합니다.
+- **Session Management**: 인증 성공 후 `HttpSession`을 통해 세션 유저 정보를 관리하며, 로그아웃은 Spring Security 필터를 통해 수행합니다.
+- **Authorization**: `SecurityConfig`를 통해 접근 권한 및 로그아웃 경로(`/logout`)를 관리합니다.
 
 ---
 

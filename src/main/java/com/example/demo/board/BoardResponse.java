@@ -43,12 +43,19 @@ public class BoardResponse {
         private boolean last;
         private int prevPage;
         private int nextPage;
+        private java.util.List<Integer> pageNumbers;
 
-        public Paging(int page, boolean last) {
+        public Paging(int page, boolean last, int totalPages) {
             this.first = (page == 0);
             this.last = last;
             this.prevPage = page - 1;
             this.nextPage = page + 1;
+            
+            // 페이지 번호 리스트 생성 (0부터 시작하는 인덱스 리스트)
+            this.pageNumbers = new java.util.ArrayList<>();
+            for (int i = 0; i < totalPages; i++) {
+                this.pageNumbers.add(i);
+            }
         }
     }
 }

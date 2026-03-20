@@ -48,18 +48,30 @@
 
 ---
 
-## Phase 3: 게시글 관리 (Board Domain) - [대기]
+## Phase 3: 게시글 관리 및 페이징 Deep Dive (Learning Focus) - [진행 중]
 
-### 3.1 게시글 목록 보기 (List)
-- [ ] **[DTO]** `BoardResponse.Max` 목록용 DTO 작성 (작성자 username 포함)
-- [ ] **[Service]** `BoardService.findAll` 구현 (페이징 `Pageable` 적용)
-- [ ] **[SSR]** `BoardController` GET `/` (또는 `/board/list`) 구현
-- [ ] **[UI]** `board/list.mustache` 작성 (Mustache 반복문 활용)
-- [ ] **[Validation]** 초기 데이터(`data.sql`)가 메인 페이지에 정상 출력되는지 확인
+### 3.0 환경 구축 (Data Preparation)
+- [x] **[Data]** `data.sql`에 테스트용 게시글 20개 이상 삽입 완료
 
-### 3.2 게시글 상세 보기 (Detail)
+### 3.1 SQL 레벨 페이징 (Database Layer)
+- [ ] **[H2]** 콘솔에서 `LIMIT`, `OFFSET` 수동 쿼리 실행 및 결과 비교 (0 vs 3 vs 6)
+- [ ] **[Repo]** `BoardRepository`에 `@Query`를 활용한 수동 페이징 메서드 구현 (인자: `limit`, `offset`)
+- [ ] **[Log]** Hibernate 실행 쿼리 로그를 통해 실제 물리 쿼리 관찰
+
+### 3.2 메타데이터 계산 (Business Logic)
+- [ ] **[DTO]** `PagingDTO` 설계 (현재 페이지, 시작/끝 페이지, 이전/다음 존재 여부)
+- [ ] **[Service]** 총 게시글 수(`COUNT`) 조회 및 페이징 메타데이터 수동 계산 로직 구현
+
+### 3.3 UI 동적 렌더링 (View Layer)
+- [ ] **[UI]** `board/list.mustache` 하단에 페이징 버튼 레이아웃 작성
+- [ ] **[Mustache]** 계산된 메타데이터를 활용하여 버튼 활성/비활성 및 번호 노출 제어
+
+### 3.4 JPA 추상화 연결 (Refactoring)
+- [ ] **[JPA]** 수동 로직을 `Pageable`과 `Page<T>` 인터페이스로 전환
+- [ ] **[Compare]** 직접 짠 로직과 스프링 제공 기능의 차이점 및 편의성 분석
+
+### 3.5 게시글 상세 보기 (Detail)
 - [ ] **[DTO]** `BoardResponse.Detail` 작성 (게시글 + 작성자 + 댓글 리스트)
 - [ ] **[Service]** `BoardService.findById` 구현 (LAZY 페칭 최적화)
 - [ ] **[SSR]** `BoardController` GET `/board/{id}` 구현
 - [ ] **[UI]** `board/detail.mustache` 작성 (수정/삭제 버튼 권한 분기)
-- [ ] **[Validation]** 존재하지 않는 ID 접근 시 404 에러 페이지 처리 확인

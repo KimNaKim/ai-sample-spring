@@ -35,4 +35,20 @@ public class BoardResponse {
             this.username = board.getUser().getUsername();
         }
     }
+
+    // 페이징 메타데이터를 담는 DTO (학습 목적)
+    @Data
+    public static class Paging {
+        private boolean first;
+        private boolean last;
+        private int prevPage;
+        private int nextPage;
+
+        public Paging(int page, boolean last) {
+            this.first = (page == 0);
+            this.last = last;
+            this.prevPage = page - 1;
+            this.nextPage = page + 1;
+        }
+    }
 }

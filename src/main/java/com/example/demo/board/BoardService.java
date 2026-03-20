@@ -28,4 +28,16 @@ public class BoardService {
                 .map(BoardResponse.Max::new)
                 .collect(Collectors.toList());
     }
+
+    // 수동 페이징 메서드 추가 (학습용)
+    public List<BoardResponse.Max> findAllManual(int page) {
+        int limit = 3;      // 한 페이지에 3개씩
+        int offset = page * limit; // 직접 계산
+
+        List<Board> boardList = boardRepository.findAllManual(limit, offset);
+
+        return boardList.stream()
+                .map(BoardResponse.Max::new)
+                .collect(Collectors.toList());
+    }
 }

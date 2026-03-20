@@ -1,43 +1,39 @@
-# 🚩 작업 보고서: Phase 2 회원 인증 시스템 완성
+# 🚩 작업 보고서: 회원 탈퇴 기능 구현 (Membership Withdrawal)
 
-- **작업 일시**: 2026-03-19
+- **작업 일시**: 2026-03-20
 - **진행 단계**: 완료
 
 ## 1. 🌊 전체 작업 흐름 (Workflow)
-1. **BCrypt 암호화 도입**: 평문 저장 방식에서 `jbcrypt` 라이브러리를 사용한 해시 암호화 방식으로 전환하였습니다.
-2. **회원가입 기능 고도화**: `UserRequest.Join` DTO에 주소 필드를 추가하고, Daum 우편번호 API를 연동한 세련된 UI를 적용하였습니다.
-3. **로그인 및 세션 관리**: BCrypt 검증 로직을 구현하고, 기존 평문 사용자를 위한 자동 해시 마이그레이션 로직을 추가하여 하이브리드 로그인을 지원합니다.
-4. **회원 정보 수정**: 세션 정보를 기반으로 기존 데이터를 바인딩하고, 수정 시 DB와 세션을 동시에 최신화하는 로직을 완성하였습니다.
-5. **디자인 시스템 적용**: `frontend-design` 스킬을 활용하여 모든 폼에 일관된 디자인 토큰(CSS 변수)을 적용하였습니다.
+1. **요구사항 분석**: Phase 2의 미완료 과제인 '회원 탈퇴' 기능을 설계. 보안을 위해 비밀번호 재확인 절차를 포함하기로 결정.
+2. **DTO 설계**: `UserRequest.Withdraw`를 추가하여 클라이언트로부터 비밀번호를 안전하게 전달받을 구조 구축.
+3. **비즈니스 로직 구현**: `UserService`에서 `PasswordEncoder.matches()`를 사용해 본인 여부를 검증하고, JPA의 `deleteById`를 통해 물리적 삭제(Hard Delete) 수행.
+4. **컨트롤러 연동**: 탈퇴 폼 이동(`GET`)과 탈퇴 처리(`POST`) 엔드포인트를 구현하고, 탈퇴 성공 시 세션 무효화(`session.invalidate()`) 처리.
+5. **UI 구현**: `withdraw-form.mustache`를 생성하여 사용자에게 데이터 삭제에 대한 강력한 경고 메시지를 전달하고, 디자인 토큰을 활용해 일관된 UI 제공.
+6. **진입점 확보**: `update-form.mustache` 하단에 탈퇴 페이지로 이동할 수 있는 링크를 추가.
 
 ## 2. 🧩 핵심 코드 (Core Logic)
+### UserService.java
 ```java
-// 하이브리드 로그인 및 자동 마이그레이션 로직
 @Transactional
-public UserResponse.Min login(UserRequest.Login requestDTO) {
-    User user = userRepository.findByUsername(requestDTO.getUsername())
-            .orElseThrow(() -> new RuntimeException("아이디 또는 비밀번호가 틀렸습니다."));
+public void withdraw(Integer id, UserRequest.Withdraw requestDTO) {
+    // 1. 회원 존재 여부 확인
+    User user = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
 
-    String dbPassword = user.getPassword();
-    boolean isValid = false;
-
-    if (dbPassword.startsWith("$2a$")) { // BCrypt 형식 확인
-        isValid = BCrypt.checkpw(requestDTO.getPassword(), dbPassword);
-    } else { // 평문일 경우 마이그레이션
-        isValid = dbPassword.equals(requestDTO.getPassword());
-        if (isValid) {
-            String hash = BCrypt.hashpw(requestDTO.getPassword(), BCrypt.gensalt());
-            user.setPassword(hash); // 더티 체킹으로 자동 업데이트
-        }
+    // 2. 비밀번호 일치 여부 검증 (BCrypt matches 사용)
+    if (!passwordEncoder.matches(requestDTO.getPassword(), user.getPassword())) {
+        throw new RuntimeException("비밀번호가 틀렸습니다.");
     }
-    // ... 검증 및 결과 반환
+
+    // 3. 물리적 삭제 수행
+    userRepository.deleteById(id);
 }
 ```
 
 ## 3. 🍦 상세비유 (Easy Analogy)
-> "이번 작업은 **낡은 금고를 최신 디지털 도어락으로 교체**한 것과 같습니다. 기존 열쇠(평문)를 가진 사람도 처음 한 번만 들어오면 자동으로 지문(해시)이 등록되어 다음부터는 더 안전하게 드나들 수 있게 되었죠. 또한, 이사 갈 때(정보 수정) 주소록을 한꺼번에 업데이트하는 편리함도 갖췄습니다!"
+> "이번 작업은 **'헬스장 회원권 해지'**와 같습니다. 단순히 나간다고 말하는 게 아니라, 데스크에 가서 **본인 확인(비밀번호)**을 하고, 그동안의 **기록(데이터)**이 모두 사라진다는 안내를 받은 뒤, 마지막으로 **회원 카드(세션)**를 반납하는 과정과 똑같아요!"
 
 ## 4. 📚 기술 딥다이브 (Technical Deep-dive)
-- **BCrypt Salting**: 단순 해시가 아닌 솔트(Salt)를 섞어 레인보우 테이블 공격을 방어합니다.
-- **Dirty Checking**: JPA 영속성 컨텍스트를 활용해 별도의 `update` 쿼리 없이 객체의 값 변경만으로 DB 수정을 완료합니다.
-- **Design Tokens**: CSS 변수를 사용하여 테마 변경이나 일관된 스타일 유지가 매우 용이해졌습니다.
+- **Hard Delete (물리적 삭제)**: `DELETE` 쿼리를 직접 실행하여 DB에서 데이터를 완전히 삭제하는 방식입니다. 데이터 복구가 불가능하므로 반드시 사용자에게 충분한 고지가 필요합니다.
+- **Session Invalidation**: `session.invalidate()`는 현재 사용자의 세션을 즉시 만료시켜, 탈퇴 후 더 이상 인증된 상태로 시스템에 머물 수 없게 만듭니다.
+- **Security Validation**: `PasswordEncoder.matches(rawPassword, encodedPassword)`를 사용하여 해싱된 비밀번호와 입력된 비밀번호를 안전하게 대조했습니다. 직접적인 비교가 불가능한 단방향 암호화의 특성을 활용한 보안 기법입니다.

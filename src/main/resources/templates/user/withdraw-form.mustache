@@ -1,0 +1,53 @@
+{{> layout/header}}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5">
+            <div class="content-card shadow-md border-0 p-5 text-center" style="border-radius: var(--radius-lg); background-color: var(--color-surface);">
+                
+                <!-- 아이콘 및 헤더 -->
+                <div class="mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 80px; height: 80px; border-radius: 50%; background-color: #fee2e2;">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 2.5rem; color: #ef4444;"></i>
+                    </div>
+                    <h2 class="fw-bold" style="color: var(--color-text-main);">회원 탈퇴 안내</h2>
+                </div>
+
+                <!-- 경고 메시지 -->
+                <div class="alert mb-4 p-3" style="background-color: var(--color-bg); border: 1px dashed #ef4444; border-radius: var(--radius-md);">
+                    <p class="mb-2 fw-bold" style="color: #ef4444;">정말 탈퇴하시겠습니까?</p>
+                    <p class="small mb-0" style="color: var(--color-text-muted);">
+                        탈퇴 시 계정 정보 및 작성하신 모든 게시글, 댓글 데이터가 삭제되며 <br>
+                        <strong>절대 복구할 수 없습니다.</strong>
+                    </p>
+                </div>
+
+                <form action="/user/withdraw" method="post">
+                    <!-- 비밀번호 확인 -->
+                    <div class="mb-4 text-start">
+                        <label for="password" class="form-label fw-bold small" style="color: var(--color-text-main);">본인 확인을 위해 비밀번호를 입력해주세요</label>
+                        <input type="password" class="form-control py-2" id="password" name="password" required
+                               placeholder="현재 비밀번호 입력"
+                               style="border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
+                    </div>
+
+                    <!-- 버튼 그룹 -->
+                    <div class="d-grid gap-3">
+                        <button type="submit" class="btn fw-bold py-3 text-white"
+                                style="border-radius: var(--radius-md); background-color: #ef4444; border: none; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);">
+                            회원 탈퇴 확정
+                        </button>
+                        <a href="/user/update-form" class="btn fw-bold py-2" 
+                           style="color: var(--color-text-muted); border-radius: var(--radius-md); background-color: transparent;">
+                            취소하고 돌아가기
+                        </a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> layout/footer}}

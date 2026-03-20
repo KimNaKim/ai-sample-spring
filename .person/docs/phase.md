@@ -11,7 +11,7 @@
 - [x] Spring Security 도입 및 `PasswordEncoder.matches()` 기반 인증 구현
 - [x] `SecurityConfig` 설정을 통한 권한 및 CSRF 관리
 - [x] 회원 정보 수정 (Update) 및 세션 동기화 로직 구현
-- [ ] 회원 탈퇴 및 관련 데이터 처리 로직 (추후 구현 가능)
+- [x] 회원 탈퇴 및 관련 데이터 처리 로직 (완료)
 - [x] 인증 필터 또는 인터셉터를 통한 권한 관리 (Security 설정으로 대체)
 
 ## Phase 3: 게시글 관리 시스템 (Core Blog Features)

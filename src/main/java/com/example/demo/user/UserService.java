@@ -51,6 +51,18 @@ public class UserService {
         return new UserResponse.Min(user); // 더티 체킹으로 업데이트됨
     }
 
+    @Transactional
+    public void withdraw(Integer id, UserRequest.Withdraw requestDTO) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
+
+        if (!passwordEncoder.matches(requestDTO.getPassword(), user.getPassword())) {
+            throw new RuntimeException("비밀번호가 틀렸습니다.");
+        }
+
+        userRepository.deleteById(id);
+    }
+
     public void sameCheck(String username) {
         userRepository.findByUsername(username)
                 .ifPresent(user -> {

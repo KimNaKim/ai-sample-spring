@@ -36,6 +36,10 @@ public class Board {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    // RULE: 양방향 매핑 시 mappedBy를 사용하며, 게시글 삭제 시 관련 댓글도 자동 삭제한다.
+    @jakarta.persistence.OneToMany(mappedBy = "board", cascade = jakarta.persistence.CascadeType.REMOVE, orphanRemoval = true)
+    private java.util.List<com.example.demo.reply.Reply> replies;
+
     @Builder
     public Board(Integer id, String title, String content, User user, LocalDateTime createdAt) {
         this.id = id;

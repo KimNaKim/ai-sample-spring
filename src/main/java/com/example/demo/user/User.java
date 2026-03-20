@@ -38,6 +38,13 @@ public class User {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    // RULE: 양방향 매핑 시 mappedBy를 사용하며, cascade를 통해 연관된 데이터도 함께 삭제한다.
+    @jakarta.persistence.OneToMany(mappedBy = "user", cascade = jakarta.persistence.CascadeType.REMOVE, orphanRemoval = true)
+    private java.util.List<com.example.demo.board.Board> boards;
+
+    @jakarta.persistence.OneToMany(mappedBy = "user", cascade = jakarta.persistence.CascadeType.REMOVE, orphanRemoval = true)
+    private java.util.List<com.example.demo.reply.Reply> replies;
+
     // RULE: 컬렉션은 생성자에 넣지 않는다.
     @Builder
     public User(Integer id, String username, String password, String email, String postcode, String address, String detailAddress, String extraAddress, LocalDateTime createdAt) {

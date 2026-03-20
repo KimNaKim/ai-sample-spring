@@ -55,4 +55,10 @@ public class UserRequest {
         private String extraAddress;
     }
 
+    @Data
+    public static class Withdraw {
+        @NotBlank(message = "비밀번호를 입력해주세요.")
+        private String password;
+    }
+
 }

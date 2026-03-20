@@ -48,7 +48,8 @@ public class UserController {
         }
 
         User user = userService.findById(sessionUser.getId());
-        model.addAttribute("user", user);
+        UserResponse.Detail responseDTO = new UserResponse.Detail(user);
+        model.addAttribute("user", responseDTO);
         return "user/update-form";
     }
 
@@ -61,6 +62,31 @@ public class UserController {
 
         UserResponse.Min updatedUser = userService.update(sessionUser.getId(), requestDTO);
         session.setAttribute("sessionUser", updatedUser);
+        return "redirect:/";
+    }
+
+    @GetMapping("/user/withdraw-form")
+    public String withdrawForm() {
+        UserResponse.Min sessionUser = (UserResponse.Min) session.getAttribute("sessionUser");
+        if (sessionUser == null) {
+            return "redirect:/login-form";
+        }
+        return "user/withdraw-form";
+    }
+
+    @PostMapping("/user/withdraw")
+    public String withdraw(@Valid UserRequest.Withdraw requestDTO, BindingResult br) {
+        if (br.hasErrors()) {
+            throw new RuntimeException(br.getFieldError().getDefaultMessage());
+        }
+
+        UserResponse.Min sessionUser = (UserResponse.Min) session.getAttribute("sessionUser");
+        if (sessionUser == null) {
+            return "redirect:/login-form";
+        }
+
+        userService.withdraw(sessionUser.getId(), requestDTO);
+        session.invalidate();
         return "redirect:/";
     }
 

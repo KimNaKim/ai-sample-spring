@@ -8,10 +8,11 @@
                 <hr class="mb-4" style="border-color: var(--color-border); opacity: 0.5;">
                 
                 <form action="/user/update" method="post">
+                    {{#user}}
                     <!-- 아이디 섹션 (수정 불가) -->
                     <div class="mb-4">
                         <label for="username" class="form-label fw-bold" style="color: var(--color-text-main);">아이디</label>
-                        <input type="text" class="form-control" id="username" value="{{user.username}}" readonly
+                        <input type="text" class="form-control" id="username" value="{{#username}}{{username}}{{/username}}" readonly
                                style="border-radius: var(--radius-sm); border: 1px solid var(--color-border); background-color: #f8f9fa;">
                         <div class="form-text mt-1 small" style="color: var(--color-text-muted);">아이디는 수정할 수 없습니다.</div>
                     </div>
@@ -26,7 +27,7 @@
                     <!-- 이메일 섹션 -->
                     <div class="mb-4">
                         <label for="email" class="form-label fw-bold" style="color: var(--color-text-main);">이메일</label>
-                        <input type="email" class="form-control" id="email" value="{{user.email}}" name="email" required
+                        <input type="email" class="form-control" id="email" value="{{#email}}{{email}}{{/email}}" name="email" required
                                style="border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
                     </div>
 
@@ -34,22 +35,22 @@
                     <div class="mb-4">
                         <label class="form-label fw-bold d-block" style="color: var(--color-text-main);">주소</label>
                         <div class="input-group mb-2">
-                            <input type="text" class="form-control" id="postcode" name="postcode" value="{{#user.postcode}}{{user.postcode}}{{/user.postcode}}" placeholder="우편번호" readonly
+                            <input type="text" class="form-control" id="postcode" name="postcode" value="{{#postcode}}{{postcode}}{{/postcode}}" placeholder="우편번호" readonly
                                    style="border-radius: var(--radius-sm) 0 0 var(--radius-sm); border: 1px solid var(--color-border); background-color: #fcfcfc;">
                             <button type="button" class="btn btn-secondary btn-sm fw-bold" onclick="daumPostcode()"
                                     style="border-radius: 0 var(--radius-sm) var(--radius-sm) 0; background-color: var(--color-text-muted); border: none;">
                                 주소 찾기
                             </button>
                         </div>
-                        <input type="text" class="form-control mb-2" id="address" name="address" value="{{#user.address}}{{user.address}}{{/user.address}}" placeholder="기본 주소" readonly
+                        <input type="text" class="form-control mb-2" id="address" name="address" value="{{#address}}{{address}}{{/address}}" placeholder="기본 주소" readonly
                                style="border-radius: var(--radius-sm); border: 1px solid var(--color-border); background-color: #fcfcfc;">
                         <div class="row g-2">
                             <div class="col-md-6">
-                                <input type="text" class="form-control" id="detailAddress" name="detailAddress" value="{{#user.detailAddress}}{{user.detailAddress}}{{/user.detailAddress}}" placeholder="상세 주소"
+                                <input type="text" class="form-control" id="detailAddress" name="detailAddress" value="{{#detailAddress}}{{detailAddress}}{{/detailAddress}}" placeholder="상세 주소"
                                        style="border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
                             </div>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" id="extraAddress" name="extraAddress" value="{{#user.extraAddress}}{{user.extraAddress}}{{/user.extraAddress}}" placeholder="참고항목" readonly
+                                <input type="text" class="form-control" id="extraAddress" name="extraAddress" value="{{#extraAddress}}{{extraAddress}}{{/extraAddress}}" placeholder="참고항목" readonly
                                        style="border-radius: var(--radius-sm); border: 1px solid var(--color-border); background-color: #fcfcfc;">
                             </div>
                         </div>
@@ -61,6 +62,13 @@
                                 style="border-radius: var(--radius-md); background-color: var(--color-primary); border: none; transition: all 0.2s;">
                             정보 수정 완료
                         </button>
+                    </div>
+                    {{/user}}
+
+                    <!-- 회원 탈퇴 링크 (Footer 스타일) -->
+                    <div class="text-center mt-4 pt-3 border-top" style="border-color: var(--color-border) !important;">
+                        <span class="small" style="color: var(--color-text-muted);">계정을 삭제하시겠습니까?</span>
+                        <a href="/user/withdraw-form" class="small fw-bold ms-1" style="color: #ef4444; text-decoration: none;">회원 탈퇴</a>
                     </div>
                 </form>
             </div>

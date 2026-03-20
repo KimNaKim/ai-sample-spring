@@ -1,7 +1,7 @@
 {{> layout/header}}
 
 <div class="container my-5">
-    <!-- [Step 1] 전체 게시글 목록 출력 (페이징 버튼 없음) -->
+    <!-- 게시글 목록 그리드 -->
     <div class="row g-4">
         {{#models}}
         <div class="col-md-4">
@@ -24,7 +24,7 @@
         {{/models}}
     </div>
 
-    <!-- [Step 3 & 4] UI 제어: 페이징 버튼 및 번호 목록 -->
+    <!-- UI 제어: 페이징 버튼 및 번호 목록 -->
     <div class="d-flex justify-content-center mt-5">
         <ul class="pagination gap-2 border-0">
             {{#paging}}
@@ -33,7 +33,7 @@
                 <a class="page-link py-2 px-4 fw-bold shadow-sm {{#first}}disabled opacity-50{{/first}}" 
                    href="/?page={{prevPage}}" 
                    style="border-radius: var(--radius-lg); border: 1px solid var(--color-border); color: var(--color-text-main); background-color: var(--color-surface);">
-                    <i class="fa-solid fa-chevron-left me-2 small"></i>이전
+                    이전
                 </a>
             </li>
 
@@ -52,7 +52,7 @@
                 <a class="page-link py-2 px-4 fw-bold shadow-sm text-white {{#last}}disabled opacity-50{{/last}}" 
                    href="/?page={{nextPage}}" 
                    style="border-radius: var(--radius-lg); background-color: var(--color-primary); border: none;">
-                    다음<i class="fa-solid fa-chevron-right ms-2 small"></i>
+                    다음
                 </a>
             </li>
             {{/paging}}

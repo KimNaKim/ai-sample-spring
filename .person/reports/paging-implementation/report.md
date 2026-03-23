@@ -1,60 +1,57 @@
-# 🚩 작업 보고서: 페이징 기능 및 사용자 유효성 검사 구현
+# 🚩 작업 보고서: 페이징 기능 및 ListDTO 기반 리팩토링 구현
 
 - **작업 일시**: 2026-03-23
 - **진행 단계**: 완료
 
 ## 1. 🌊 전체 작업 흐름 (Workflow)
 1. **공통 응답 유틸리티 확장**: `Resp.java`에 자바스크립트 `alert`와 `history.back()`을 결합한 `script()` 메서드를 추가하여 비정상 접근에 대한 즉각적인 피드백 구조를 마련했습니다.
-2. **DTO 구조 정밀 설계**: `BoardResponse.java` 내 `Paging` DTO에 현재 페이지(`current`), 첫 페이지 여부(`first`), 마지막 페이지 여부(`last`) 등을 추가하고, Mustache 렌더링을 위해 페이지 번호 객체 리스트(`PageNumber`)를 생성하는 로직을 구현했습니다.
-3. **컨트롤러 유효성 검사 강화**: `BoardController`에서 사용자의 `1-based` 요청 번호를 검증(1보다 작거나 마지막 페이지를 초과하는 경우)하여 잘못된 접근 시 브라우저 팝업을 띄우고 이전 페이지로 되돌리는 보안 로직을 적용했습니다.
-4. **UI 레이아웃 최적화**: `list.mustache`에 디자인 시스템 토큰을 적용하여 현재 페이지는 강조하고, 이동 불가능한 버튼(이전/다음)은 비활성화(`disabled`) 및 반투명 처리하여 직관적인 UX를 완성했습니다.
+2. **DTO 구조 정밀 설계 및 리팩토링**: 
+    - `BoardResponse.java`에 `ListDTO`를 추가하여 게시글 목록과 페이징 정보를 하나의 객체로 통합했습니다.
+    - `Paging` DTO 내부에서 현재 페이지 강조를 위한 `PageNumber` 객체 리스트 생성 로직을 고도화했습니다.
+3. **컨트롤러 유효성 검사 및 단순화**: 
+    - `BoardController`에서 사용자의 `1-based` 요청 번호를 검증하고, `ListDTO` 하나만을 모델에 담아 넘기도록 컨트롤러 로직을 단순화했습니다.
+    - `jakarta.servlet` 패키지 오류를 수정하고 임포트를 최적화했습니다.
+4. **UI 레이아웃 최적화**: `list.mustache`에 계층형 데이터 구조(`model.boards`, `model.paging`)를 적용하고 디자인 시스템 토큰을 통해 세련된 UI를 완성했습니다.
 
 ## 2. 🧩 핵심 코드 (Core Logic)
 
-### 2.1 컨트롤러 유효성 검사 및 변환
+### 2.1 통합 DTO (ListDTO)
 ```java
-@GetMapping({"/", "/board"})
-public String home(@RequestParam(name = "page", defaultValue = "1") int page, Model model, HttpServletResponse response) throws IOException {
-    // 1-based 최소값 검증
-    if (page < 1) {
-        response.setContentType("text/html; charset=utf-8");
-        response.getWriter().println(Resp.script("1페이지가 시작입니다."));
-        return null; // 실행 중단
-    }
-    
-    // 전체 페이지 수 계산 및 최대값 검증
-    long totalCount = boardRepository.count();
-    int totalPages = (int) Math.ceil((double) totalCount / limit);
-    if (totalCount > 0 && page > totalPages) {
-        response.setContentType("text/html; charset=utf-8");
-        response.getWriter().println(Resp.script("마지막 페이지입니다."));
-        return null;
-    }
+@Data
+public static class ListDTO {
+    private List<Max> boards;
+    private Paging paging;
 
-    // 0-based 변환 후 서비스 호출 (1 -> 0)
-    List<BoardResponse.Max> models = boardService.findAllManual(page - 1);
-    // ...
+    public ListDTO(List<Max> boards, int page, boolean last, int totalPages) {
+        this.boards = boards;
+        this.paging = new Paging(page, last, totalPages);
+    }
 }
 ```
 
-### 2.2 공통 스크립트 응답 유틸리티
+### 2.2 컨트롤러 (Refactored)
 ```java
-public static String script(String msg) {
-    return """
-           <script>
-               alert("%s");
-               history.back();
-           </script>
-           """.formatted(msg);
+@GetMapping({"/", "/board"})
+public String home(@RequestParam(name = "page", defaultValue = "1") int page, Model model, HttpServletResponse response) throws IOException {
+    // 1. 유효성 검사 (생략)
+    
+    // 2. 데이터 조회 및 DTO 통합
+    List<BoardResponse.Max> boards = boardService.findAllManual(page - 1);
+    boolean last = (page >= totalPages);
+    BoardResponse.ListDTO listDTO = new BoardResponse.ListDTO(boards, page, last, totalPages);
+    
+    // 3. 모델 전송 (단일 객체)
+    model.addAttribute("model", listDTO); 
+    return "board/list";
 }
 ```
 
 ## 3. 🍦 상세비유 (Easy Analogy)
-> "이번 작업은 **'엘리베이터의 층수 버튼'**을 설계한 것과 같습니다!
+> "이번 리팩토링은 **'배달 음식 세트 메뉴'**를 만든 것과 같습니다!
 > 
-> 아파트 지하가 0층(0-based)이라고 해도 주민들은 1층(1-based)이라고 불러야 편하죠. 그래서 버튼 숫자는 1부터 보이게 했습니다. 하지만 누군가 존재하지 않는 100층 버튼을 억지로 누르려 하거나 주소창에 직접 입력하면, 엘리베이터가 **'삐- 잘못된 층입니다'**라는 안내 방송(`alert`)을 내보내고 원래 있던 층(`history.back`)으로 돌려보내도록 안전장치를 만든 셈입니다."
+> 이전에는 짜장면(`boards`)과 단무지(`paging`)를 따로따로 배달했다면, 이제는 **'실속 세트(`ListDTO`)'**라는 상자 하나에 모두 정갈하게 담아서 한 번에 전달하는 방식입니다. 받는 사람(Mustache 템플릿)은 상자 하나만 열어보면 모든 구성품을 쉽게 찾을 수 있어 훨씬 깔끔해졌죠!"
 
 ## 4. 📚 기술 딥다이브 (Technical Deep-dive)
-- **1-based vs 0-based 변환**: 데이터베이스의 `OFFSET`은 건너뛸 개수를 의미하므로 0부터 시작하는 것이 수학적으로 유리합니다. 하지만 사용자는 1부터 세는 것이 익숙하므로, 컨트롤러가 이 사이에서 `page - 1` 연산을 수행하는 '번역가' 역할을 합니다.
-- **Direct Script Response**: `@Controller`에서 `HttpServletResponse`를 직접 사용하여 HTML을 응답하면, 스프링의 뷰 리졸버를 거치지 않고 브라우저에 즉각적인 명령(JavaScript)을 전달할 수 있습니다. 이는 SSR 환경에서 매우 빠르고 확실한 피드백 수단이 됩니다.
-- **Mustache Boolean Logic**: `{{#current}}...{{/current}}` 처럼 객체 리스트의 불리언 필드를 활용하여 현재 페이지에만 특정 CSS 클래스나 스타일을 동적으로 입힐 수 있습니다.
+- **Data Encapsulation (데이터 캡슐화)**: 관련 있는 데이터를 하나의 DTO로 묶음으로써 데이터의 응집도를 높이고, 컨트롤러와 뷰 사이의 결합도를 낮추었습니다.
+- **Jakarta EE Compliance**: `org.jakarta` 대신 최신 표준인 `jakarta.servlet` 패키지를 사용하여 Spring Boot 3.x/4.x 환경에서의 호환성을 확보했습니다.
+- **UI Hierarchy with Mustache**: 템플릿 엔진에서 객체의 계층 구조를 참조(`model.xxx`)하게 함으로써, 전역 네임스페이스 오염을 방지하고 데이터의 출처를 명확히 했습니다.

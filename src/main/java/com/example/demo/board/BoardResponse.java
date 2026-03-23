@@ -36,6 +36,18 @@ public class BoardResponse {
         }
     }
 
+    // 목록 화면 전체를 위한 DTO
+    @Data
+    public static class ListDTO {
+        private java.util.List<Max> boards;
+        private Paging paging;
+
+        public ListDTO(java.util.List<Max> boards, int page, boolean last, int totalPages) {
+            this.boards = boards;
+            this.paging = new Paging(page, last, totalPages);
+        }
+    }
+
     // 페이징 메타데이터를 담는 DTO
     @Data
     public static class Paging {

@@ -41,14 +41,13 @@ public class BoardController {
         }
 
         // 4. 페이징 데이터 조회 (1-based -> 0-based 변환)
-        List<BoardResponse.Max> models = boardService.findAllManual(page - 1);
+        List<BoardResponse.Max> boards = boardService.findAllManual(page - 1);
         
-        // 5. 페이징 메타데이터 생성
+        // 5. 페이징 메타데이터 생성 및 통합 DTO 구성
         boolean last = (page >= totalPages);
-        BoardResponse.Paging paging = new BoardResponse.Paging(page, last, totalPages);
+        BoardResponse.ListDTO listDTO = new BoardResponse.ListDTO(boards, page, last, totalPages);
         
-        model.addAttribute("models", models);
-        model.addAttribute("paging", paging); 
+        model.addAttribute("model", listDTO); 
         
         return "board/list";
     }

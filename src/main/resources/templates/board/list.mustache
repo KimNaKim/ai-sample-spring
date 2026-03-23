@@ -29,9 +29,9 @@
         <ul class="pagination gap-2 border-0">
             {{#paging}}
             <!-- 이전 버튼 -->
-            <li class="page-item">
-                <a class="page-link py-2 px-4 fw-bold shadow-sm {{#first}}disabled opacity-50{{/first}}" 
-                   href="/?page={{prevPage}}" 
+            <li class="page-item {{#first}}disabled opacity-50{{/first}}">
+                <a class="page-link py-2 px-4 fw-bold shadow-sm" 
+                   href="/board?page={{prevPage}}" 
                    style="border-radius: var(--radius-lg); border: 1px solid var(--color-border); color: var(--color-text-main); background-color: var(--color-surface);">
                     이전
                 </a>
@@ -40,17 +40,18 @@
             <!-- 페이지 번호 목록 -->
             {{#pageNumbers}}
             <li class="page-item">
-                <a class="page-link py-2 px-3 fw-bold shadow-sm" href="/?page={{.}}" 
-                   style="border-radius: var(--radius-sm); border: 1px solid var(--color-border); color: var(--color-text-main); background-color: var(--color-surface);">
-                    {{.}}
+                <a class="page-link py-2 px-3 fw-bold shadow-sm" href="/board?page={{number}}" 
+                   style="border-radius: var(--radius-sm); border: 1px solid var(--color-border); color: var(--color-text-main); background-color: var(--color-surface); 
+                          {{#current}}background-color: var(--color-primary); color: white; border: none;{{/current}}">
+                    {{number}}
                 </a>
             </li>
             {{/pageNumbers}}
 
             <!-- 다음 버튼 -->
-            <li class="page-item">
-                <a class="page-link py-2 px-4 fw-bold shadow-sm text-white {{#last}}disabled opacity-50{{/last}}" 
-                   href="/?page={{nextPage}}" 
+            <li class="page-item {{#last}}disabled opacity-50{{/last}}">
+                <a class="page-link py-2 px-4 fw-bold shadow-sm text-white" 
+                   href="/board?page={{nextPage}}" 
                    style="border-radius: var(--radius-lg); background-color: var(--color-primary); border: none;">
                     다음
                 </a>

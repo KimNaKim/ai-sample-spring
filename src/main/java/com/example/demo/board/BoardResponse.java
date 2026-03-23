@@ -36,25 +36,38 @@ public class BoardResponse {
         }
     }
 
-    // 페이징 메타데이터를 담는 DTO (학습 목적)
+    // 페이징 메타데이터를 담는 DTO
     @Data
     public static class Paging {
         private boolean first;
         private boolean last;
         private int prevPage;
         private int nextPage;
-        private java.util.List<Integer> pageNumbers;
+        private int current;
+        private java.util.List<PageNumber> pageNumbers;
+
+        @Data
+        public static class PageNumber {
+            private int number;
+            private boolean current;
+
+            public PageNumber(int number, int current) {
+                this.number = number;
+                this.current = (number == current);
+            }
+        }
 
         public Paging(int page, boolean last, int totalPages) {
-            this.first = (page == 0);
+            this.first = (page == 1);
             this.last = last;
             this.prevPage = page - 1;
             this.nextPage = page + 1;
+            this.current = page;
             
-            // 페이지 번호 리스트 생성 (0부터 시작하는 인덱스 리스트)
+            // 페이지 번호 리스트 생성 (PageNumber 객체 리스트)
             this.pageNumbers = new java.util.ArrayList<>();
-            for (int i = 0; i < totalPages; i++) {
-                this.pageNumbers.add(i);
+            for (int i = 1; i <= totalPages; i++) {
+                this.pageNumbers.add(new PageNumber(i, page));
             }
         }
     }

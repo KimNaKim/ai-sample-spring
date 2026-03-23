@@ -25,4 +25,13 @@ public class Resp<T> {
         Resp<?> resp = new Resp<>(status.value(), msg, null);
         return new ResponseEntity<>(resp, status);
     }
+
+    public static String script(String msg) {
+        return """
+               <script>
+                   alert("%s");
+                   history.back();
+               </script>
+               """.formatted(msg);
+    }
 }

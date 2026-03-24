@@ -33,3 +33,30 @@
 | | `--space-md` | `24px` | 섹션 내 여백 (1.5rem) |
 | | `--space-lg` | `48px` | 큰 영역 간 여백 (3rem) |
 | **Typography** | `--font-main` | `'Pretendard', system-ui, sans-serif` | 기본 폰트 |
+| **Animation** | `--transition-base` | `all 0.3s cubic-bezier(0.4, 0, 0.2, 1)` | 기본 전환 효과 |
+
+---
+
+## 3. 핵심 컴포넌트 패턴 (Component Patterns)
+
+### 3.1 Paging Card (인터랙티브 카드)
+게시글 목록 등에 사용되는 카드 패턴으로, 호버 시 사용자에게 명확한 피드백을 제공한다.
+- **Style**:
+  ```css
+  .paging-card {
+      transition: var(--transition-base);
+      border: 1px solid var(--color-border) !important;
+  }
+  .paging-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-md) !important;
+      border-color: var(--color-primary) !important;
+  }
+  ```
+
+### 3.2 Standard Pagination (표준 페이징)
+그림자와 둥근 모서리가 적용된 버튼 그룹.
+- **Style**:
+  - `이전/다음`: `--radius-lg` 적용으로 알약 모양 유지.
+  - `숫자`: `--radius-sm` 적용으로 사각형 강조.
+  - `Active`: `--color-primary` 배경색 및 `scale(1.05)` 효과.

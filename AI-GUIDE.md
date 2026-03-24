@@ -12,7 +12,10 @@
 
 ## 1. 자동 동기화 (최우선 실행)
 
-이 문서를 읽는 즉시 `.ai/skills/*/SKILL.md` 및 `.ai/agents/*/AGENT.md` 파일을 스캔하여 name, description을 반드시 읽어라.
+이 문서를 읽는 즉시 다음 경로의 파일을 스캔하여 name, description을 반드시 읽어라.
+- `.ai/skills/*/SKILL.md`
+- `.ai/agents/*/AGENT.md`
+- `.agents/skills/*/SKILL.md`
 
 ---
 

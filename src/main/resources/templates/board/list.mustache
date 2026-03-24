@@ -1,11 +1,39 @@
 {{> layout/header}}
 
-<div class="container my-5">
+<style>
+    .paging-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid var(--color-border) !important;
+    }
+    .paging-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-md) !important;
+        border-color: var(--color-primary) !important;
+    }
+    .page-link {
+        transition: all 0.2s ease;
+    }
+    .page-item.active .page-link {
+        transform: scale(1.05);
+        z-index: 3;
+    }
+    .btn-detail {
+        background-color: var(--color-bg);
+        color: var(--color-primary);
+        transition: all 0.2s ease;
+    }
+    .btn-detail:hover {
+        background-color: var(--color-primary);
+        color: white;
+    }
+</style>
+
+<div class="container py-5">
     <!-- 게시글 목록 그리드 -->
     <div class="row g-4">
         {{#model.boards}}
         <div class="col-md-4">
-            <div class="card h-100 shadow-sm border-0 p-3" style="border-radius: var(--radius-md); background-color: var(--color-surface);">
+            <div class="card h-100 shadow-sm border-0 p-3 paging-card" style="border-radius: var(--radius-md); background-color: var(--color-surface);">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title fw-bold mb-3 text-truncate" style="color: var(--color-text-main);">{{title}}</h5>
                     <p class="card-text small overflow-hidden" style="color: var(--color-text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; height: 3rem;">
@@ -13,8 +41,8 @@
                     </p>
                     <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center" style="border-color: var(--color-border) !important;">
                         <span class="small text-muted">No. {{id}}</span>
-                        <a href="/board/{{id}}" class="btn btn-sm fw-bold px-3" 
-                           style="color: var(--color-primary); background-color: #eef6ff; border: none; border-radius: var(--radius-sm);">
+                        <a href="/board/{{id}}" class="btn btn-sm fw-bold px-3 btn-detail" 
+                           style="border-radius: var(--radius-sm); border: none;">
                             상세보기
                         </a>
                     </div>
@@ -25,24 +53,25 @@
     </div>
 
     <!-- UI 제어: 페이징 버튼 및 번호 목록 -->
-    <div class="d-flex justify-content-center mt-5">
+    <div class="d-flex justify-content-center mt-5 pt-4">
         <ul class="pagination gap-2 border-0">
             {{#model.paging}}
             <!-- 이전 버튼 -->
             <li class="page-item {{#first}}disabled opacity-50{{/first}}">
                 <a class="page-link py-2 px-4 fw-bold shadow-sm" 
-                   href="/board?page={{prevPage}}" 
-                   style="border-radius: var(--radius-lg); border: 1px solid var(--color-border); color: var(--color-text-main); background-color: var(--color-surface);">
+                   {{^first}}href="/board?page={{prevPage}}"{{/first}} 
+                   style="border-radius: var(--radius-lg); border: 1px solid var(--color-border); color: var(--color-text-main); background-color: var(--color-surface); {{#first}}cursor: default;{{/first}}">
                     이전
                 </a>
             </li>
 
             <!-- 페이지 번호 목록 -->
             {{#pageNumbers}}
-            <li class="page-item">
-                <a class="page-link py-2 px-3 fw-bold shadow-sm" href="/board?page={{number}}" 
+            <li class="page-item {{#current}}active{{/current}}">
+                <a class="page-link py-2 px-3 fw-bold shadow-sm" 
+                   {{^current}}href="/board?page={{number}}"{{/current}} 
                    style="border-radius: var(--radius-sm); border: 1px solid var(--color-border); color: var(--color-text-main); background-color: var(--color-surface); 
-                          {{#current}}background-color: var(--color-primary); color: white; border: none;{{/current}}">
+                          {{#current}}background-color: var(--color-primary); color: white; border: none; cursor: default;{{/current}}">
                     {{number}}
                 </a>
             </li>
@@ -51,8 +80,8 @@
             <!-- 다음 버튼 -->
             <li class="page-item {{#last}}disabled opacity-50{{/last}}">
                 <a class="page-link py-2 px-4 fw-bold shadow-sm text-white" 
-                   href="/board?page={{nextPage}}" 
-                   style="border-radius: var(--radius-lg); background-color: var(--color-primary); border: none;">
+                   {{^last}}href="/board?page={{nextPage}}"{{/last}} 
+                   style="border-radius: var(--radius-lg); background-color: var(--color-primary); border: none; {{#last}}cursor: default;{{/last}}">
                     다음
                 </a>
             </li>
